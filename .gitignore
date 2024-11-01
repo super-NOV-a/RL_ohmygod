@@ -1,0 +1,12 @@
+for_Save/
+.idea/
+train_test/agent_paths/
+train_test/model/
+train_test/not_used/
+train_test/runs/
+train_test/test1/agent_paths/
+train_test/test2/agent_paths/
+train_test/test3/agent_paths/
+train_test/test4/agent_paths/
+gym_pybullet_drones/new_envs/
+gym_pybullet_drones/example/

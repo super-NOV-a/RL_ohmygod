@@ -74,5 +74,5 @@ def load_and_plot_results(save_file_path):
 
 
 # 调用函数并传入保存文件路径
-save_file_path = "./test_3/agent_paths/c3v1A_9200/0_胜True_成True.txt"  # 替换为实际的文件路径
+save_file_path = "./test_4/agent_paths/c3v1_0Comm_9200/0_作战False.txt"  # 替换为实际的文件路径
 load_and_plot_results(save_file_path)

@@ -1,7 +1,6 @@
 import os
 import pickle
 import random
-
 import torch
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
@@ -9,7 +8,7 @@ import argparse
 import copy
 from utils.replay_buffer import ReplayBuffer
 from utils.maddpg import MADDPG
-from utils.matd3_graph import MATD3
+from utils.mahpo import MAHPO
 from gym_pybullet_drones.envs.C3V1 import C3V1
 from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
@@ -91,9 +90,9 @@ class Runner:
         if self.args.algorithm == "MADDPG":
             print("Algorithm: MADDPG")
             self.agent_n = [MADDPG(self.args, agent_id) for agent_id in range(args.N_drones)]
-        elif self.args.algorithm == "MATD3":
-            print("Algorithm: MATD3")
-            self.agent_n = [MATD3(self.args, agent_id) for agent_id in range(args.N_drones)]
+        elif self.args.algorithm == "MAHPO":
+            print("Algorithm: MAHPO")
+            self.agent_n = [MAHPO(self.args, agent_id) for agent_id in range(args.N_drones)]
         else:
             print("Wrong!!!")
         self.replay_buffer = ReplayBuffer(self.args)
@@ -247,7 +246,7 @@ if __name__ == '__main__':
     parser.add_argument("--evaluate_times", type=float, default=1, help="Evaluate times")
     parser.add_argument("--max_action", type=float, default=1.0, help="Max action")
 
-    parser.add_argument("--algorithm", type=str, default="MATD3", help="MADDPG or MATD3")
+    parser.add_argument("--algorithm", type=str, default="MAHPO", help="MADDPG or MATD3, MAHPO")
     parser.add_argument("--buffer_size", type=int, default=int(1e6), help="The capacity of the replay buffer")
     parser.add_argument("--batch_size", type=int, default=1024, help="Batch size")  # 1024-》4048
     parser.add_argument("--hidden_dim", type=int, default=64,

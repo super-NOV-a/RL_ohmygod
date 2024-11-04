@@ -1,16 +1,16 @@
 import os
 import pickle
 import random
-
 import torch
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 import argparse
 import copy
-from utils.replay_buffer import ReplayBuffer
+from utils.replay_buffer import ReplayBuffer as ReplayBuffer1
+from utils.replay_buffer_multi_step import ReplayBuffer as ReplayBuffer2
 from utils.maddpg import MADDPG
-from utils.matd3_graph import MATD3
-from gym_pybullet_drones.envs.C3V1 import C3V1
+from utils.matd3_attention_multi import MATD3
+from gym_pybullet_drones.envs.C3V1_Comm import C3V1_Comm
 from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
 Env_name = 'index4_MSE_short'  # 'spread3d', 'simple_spread'  c3v1G是GAT,c3v1G2是GCN，记得修改网络结构,G3是加权GCN
@@ -70,14 +70,14 @@ class Runner:
         self.number = args.N_drones
         self.seed = args.seed  # 保证一个seed，名称使用记号--mark
         self.mark = args.mark
-        self.load_mark = None   # 9235
+        self.load_mark = None  # 9235
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
         Ctrl_Freq = args.Ctrl_Freq  # 30
         self.set_random_seed(self.seed)
-        self.env = C3V1(gui=False, num_drones=args.N_drones, obs=ObservationType(observation),
-                        act=ActionType(action),
-                        ctrl_freq=Ctrl_Freq,  # 这个值越大，仿真看起来越慢，应该是由于频率变高，速度调整的更小了
-                        need_target=True, obs_with_act=True, all_axis=2)
+        self.env = C3V1_Comm(gui=False, num_drones=args.N_drones, obs=ObservationType(observation),
+                             act=ActionType(action),
+                             ctrl_freq=Ctrl_Freq,  # 这个值越大，仿真看起来越慢，应该是由于频率变高，速度调整的更小了
+                             need_target=True, obs_with_act=True, comm_level=0)
         self.timestep = 1 / Ctrl_Freq  # 计算每个步骤的时间间隔 0.003
         self.args.obs_dim_n = [self.env.observation_space[i].shape[0] for i in
                                range(self.args.N_drones)]  # obs dimensions of N agents
@@ -95,7 +95,8 @@ class Runner:
             self.agent_n = [MATD3(self.args, agent_id) for agent_id in range(args.N_drones)]
         else:
             print("Wrong!!!")
-        self.replay_buffer = ReplayBuffer(self.args)
+        self.single_step_buffer = ReplayBuffer1(self.args)
+        self.multi_step_buffer = ReplayBuffer2(self.args)
 
         # Create a tensorboard
         self.writer = SummaryWriter(
@@ -157,7 +158,8 @@ class Runner:
                     obs_next_n = [normalizers[i].normalize(obs_next) for i, obs_next in enumerate(obs_next_n)]
 
                 # 存储经验
-                self.replay_buffer.store_transition(obs_n, actions_n, rewards_n, obs_next_n, done_n)
+                self.single_step_buffer.store_transition(obs_n, actions_n, rewards_n, obs_next_n, done_n)
+                self.multi_step_buffer.store_transition(obs_n, actions_n, rewards_n, obs_next_n, done_n)
                 obs_n = obs_next_n
 
                 # 更新奖励
@@ -183,10 +185,18 @@ class Runner:
                     break
 
             # 训练
-            if self.replay_buffer.current_size > self.args.batch_size:
+            if self.single_step_buffer.current_size > self.args.batch_size and self.total_steps < self.args.step_threshold:
                 for _ in range(50):
                     for agent_id in range(self.args.N_drones):
-                        self.agent_n[agent_id].train(self.replay_buffer, self.agent_n)
+                        self.agent_n[agent_id].train(self.single_step_buffer, self.agent_n)
+            elif self.single_step_buffer.current_size > self.args.batch_size and self.total_steps >= self.args.step_threshold:
+                for _ in range(50):
+                    for agent_id in range(self.args.N_drones):
+                        save_probability = random.random()  # 生成0到1之间的随机数
+                        if save_probability < self.args.store_prob:
+                            self.agent_n[agent_id].train(self.single_step_buffer, self.agent_n)
+                        else:
+                            self.agent_n[agent_id].train(self.multi_step_buffer, self.agent_n)
 
             print(f"total_steps:{self.total_steps} \t episode_total_reward:{int(episode_total_reward)} \t "
                   f"noise_std:{self.noise_std}")
@@ -256,8 +266,8 @@ if __name__ == '__main__':
     parser.add_argument("--noise_decay_steps", type=float, default=1e6,
                         help="How many steps before the noise_std decays to the minimum")
     parser.add_argument("--use_noise_decay", type=bool, default=True, help="Whether to decay the noise_std")
-    parser.add_argument("--lr_a", type=float, default=1e-4, help="Learning rate of actor")
-    parser.add_argument("--lr_c", type=float, default=1e-4, help="Learning rate of critic")
+    parser.add_argument("--lr_a", type=float, default=3e-4, help="Learning rate of actor")
+    parser.add_argument("--lr_c", type=float, default=3e-4, help="Learning rate of critic")
     parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
     parser.add_argument("--tau", type=float, default=0.01, help="Softly update the target network")
     parser.add_argument("--use_orthogonal_init", type=bool, default=True, help="Orthogonal initialization")
@@ -267,10 +277,13 @@ if __name__ == '__main__':
     parser.add_argument("--policy_noise", type=float, default=0.2, help="Target policy smoothing")
     parser.add_argument("--noise_clip", type=float, default=0.5, help="Clip noise")
     parser.add_argument("--policy_update_freq", type=int, default=2, help="The frequency of policy updates")
-    parser.add_argument("--seed", type=int, default=1145, help="The SEED")
-    parser.add_argument("--mark", type=int, default=1145, help="The frequency of policy updates")
+    parser.add_argument("--seed", type=int, default=55, help="The SEED")
+    parser.add_argument("--mark", type=int, default=999, help="The frequency of policy updates")
     parser.add_argument("--N_drones", type=int, default=3, help="The number of drones")
     parser.add_argument("--Ctrl_Freq", type=int, default=30, help="The frequency of ctrl")
+    parser.add_argument("--n_step", type=int, default=2)
+    parser.add_argument("--store_prob", type=float, default=0.99)
+    parser.add_argument("--step_threshold", type=int, default=int(8e6))
     args = parser.parse_args()
     args.noise_std_decay = (args.noise_std_init - args.noise_std_min) / args.noise_decay_steps
 

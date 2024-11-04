@@ -1,6 +1,5 @@
 import os
 import random
-
 import torch
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
@@ -12,7 +11,7 @@ from utils.matd3_attention import MATD3
 from gym_pybullet_drones.envs.C3V1 import C3V1
 from gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
-Env_name = 'index1_attention'  # 'spread3d', 'simple_spread'
+Env_name = 'index1_attention'  # 'index1_attention'
 action = 'vel'
 observation = 'kin_target'  # 相比kin_target 观测会多一个Fs
 
@@ -25,7 +24,7 @@ class Runner:
         self.number = args.N_drones
         self.seed = args.seed  # 保证一个seed，名称使用记号--mark
         self.mark = args.mark
-        self.load_mark = None
+        self.load_mark = 9200
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
         Ctrl_Freq = args.Ctrl_Freq  # 30
         self.set_random_seed(self.seed)
@@ -189,8 +188,8 @@ if __name__ == '__main__':
     parser.add_argument("--policy_noise", type=float, default=0.2, help="Target policy smoothing")
     parser.add_argument("--noise_clip", type=float, default=0.5, help="Clip noise")
     parser.add_argument("--policy_update_freq", type=int, default=2, help="The frequency of policy updates")
-    parser.add_argument("--seed", type=int, default=1145, help="The SEED")
-    parser.add_argument("--mark", type=int, default=1145, help="The frequency of policy updates")
+    parser.add_argument("--seed", type=int, default=42, help="The SEED")
+    parser.add_argument("--mark", type=int, default=999, help="The frequency of policy updates")
     parser.add_argument("--N_drones", type=int, default=3, help="The number of drones")
     parser.add_argument("--Ctrl_Freq", type=int, default=30, help="The frequency of ctrl")
     args = parser.parse_args()

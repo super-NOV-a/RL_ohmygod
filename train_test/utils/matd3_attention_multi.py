@@ -2,28 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import copy
-from .networks import Actor, Critic_MATD3_Attention_Potential
-
-
-class OUNoise:
-    def __init__(self, action_dim, mu=0.0, theta=0.15, sigma=0.2):
-        self.action_dim = action_dim
-        self.mu = mu
-        self.theta = theta
-        self.sigma = sigma
-        self.state = np.ones(self.action_dim) * self.mu
-        self.reset()
-
-    def reset(self):
-        """重置噪声状态为均值"""
-        self.state = np.ones(self.action_dim) * self.mu
-
-    def noise(self):
-        """生成 OU 噪声"""
-        x = self.state
-        dx = self.theta * (self.mu - x) + self.sigma * np.random.randn(self.action_dim)
-        self.state = x + dx
-        return self.state
+from .networks import Actor, Critic_MATD3_Attention_Potential   # 不再有势能
 
 
 class MATD3(object):
@@ -65,10 +44,11 @@ class MATD3(object):
 
     def train(self, replay_buffer, agent_n):
         self.actor_pointer += 1
-        batch_obs_n, batch_a_n, batch_r_n, batch_obs_next_n, batch_done_n, indices, weights = replay_buffer.sample()
+        batch_obs_n, batch_a_n, batch_r_n, batch_obs_next_n, batch_done_n = replay_buffer.sample()
 
         # Compute target_Q
-        with torch.no_grad():
+        with torch.no_grad():  # target_Q has no gradient
+            # Trick 1:target policy smoothing
             batch_a_next_n = []
             for i in range(self.N_drones):
                 batch_a_next = agent_n[i].actor_target(batch_obs_next_n[i])
@@ -76,14 +56,13 @@ class MATD3(object):
                 batch_a_next = (batch_a_next + noise).clamp(-self.max_action, self.max_action)
                 batch_a_next_n.append(batch_a_next)
 
+            # Trick 2:clipped double Q-learning
             Q1_next, Q2_next = self.critic_target(batch_obs_next_n, batch_a_next_n)
-            target_Q = batch_r_n[self.agent_id] + self.gamma * (1 - batch_done_n[self.agent_id]) * torch.min(Q1_next,
-                                                                                                             Q2_next)
+            target_Q = batch_r_n[self.agent_id] + self.gamma * (1 - batch_done_n[self.agent_id]) * torch.min(Q1_next, Q2_next)  # shape:(batch_size,1)
 
         # Compute current_Q
-        current_Q1, current_Q2 = self.critic(batch_obs_n, batch_a_n)
-        critic_loss = (weights * (F.mse_loss(current_Q1, target_Q) + F.mse_loss(current_Q2, target_Q))).mean()
-
+        current_Q1, current_Q2 = self.critic(batch_obs_n, batch_a_n)  # shape:(batch_size,1)
+        critic_loss = F.mse_loss(current_Q1, target_Q) + F.mse_loss(current_Q2, target_Q)
         # Optimize the critic
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
@@ -91,15 +70,11 @@ class MATD3(object):
             torch.nn.utils.clip_grad_norm_(self.critic.parameters(), 10.0)
         self.critic_optimizer.step()
 
-        # Update TD error for priority updates
-        td_errors = (current_Q1 - target_Q).detach().abs().cpu().numpy()
-        replay_buffer.update_priorities(indices, td_errors)
-
-        # Delayed policy updates
+        # Trick 3:delayed policy updates
         if self.actor_pointer % self.policy_update_freq == 0:
+            # Reselect the actions of the agent corresponding to 'agent_id', the actions of other agents remain unchanged
             batch_a_n[self.agent_id] = self.actor(batch_obs_n[self.agent_id])
-            actor_loss = -(self.critic.Q1(batch_obs_n, batch_a_n).mean())
-
+            actor_loss = -self.critic.Q1(batch_obs_n, batch_a_n).mean()  # Only use Q1
             # Optimize the actor
             self.actor_optimizer.zero_grad()
             actor_loss.backward()

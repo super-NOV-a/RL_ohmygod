@@ -22,7 +22,7 @@ class Runner:
         self.args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.env_name = Env_name
         self.number = args.N_drones
-        self.seed = args.seed  # 保证一个seed，名称使用记号--mark
+        self.seed = 56  # 保证一个seed，名称使用记号--mark
         self.mark = args.mark
         self.load_mark = None
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
@@ -159,7 +159,7 @@ def check_create_dir(env_name, model_dir):
 if __name__ == '__main__':
     check_create_dir(Env_name, 'model')
     parser = argparse.ArgumentParser("Hyperparameters Setting for MADDPG and MATD3 in MPE environment")
-    parser.add_argument("--max_train_steps", type=int, default=int(1e6), help=" Maximum number of training steps")
+    parser.add_argument("--max_train_steps", type=int, default=int(25e5), help=" Maximum number of training steps")
     parser.add_argument("--episode_limit", type=int, default=1000, help="Maximum number of steps per episode")
     parser.add_argument("--test_episode_limit", type=int, default=1500, help="Maximum number of steps per test episode")
     parser.add_argument("--evaluate_freq", type=float, default=int(1e6),
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     parser.add_argument("--policy_noise", type=float, default=0.2, help="Target policy smoothing")
     parser.add_argument("--noise_clip", type=float, default=0.5, help="Clip noise")
     parser.add_argument("--policy_update_freq", type=int, default=2, help="The frequency of policy updates")
-    parser.add_argument("--seed", type=int, default=56, help="The SEED")
+    parser.add_argument("--seed", type=int, default=55, help="The SEED")
     parser.add_argument("--mark", type=int, default=999, help="The frequency of policy updates")
     parser.add_argument("--N_drones", type=int, default=3, help="The number of drones")
     parser.add_argument("--Ctrl_Freq", type=int, default=30, help="The frequency of ctrl")

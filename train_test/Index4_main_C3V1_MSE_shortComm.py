@@ -68,7 +68,7 @@ class Runner:
         self.args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.env_name = Env_name
         self.number = args.N_drones
-        self.seed = args.seed  # 保证一个seed，名称使用记号--mark
+        self.seed = 55  # 保证一个seed，名称使用记号--mark
         self.mark = args.mark
         self.load_mark = None  # 9235
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
@@ -248,9 +248,9 @@ def check_create_dir(env_name, model_dir):
 if __name__ == '__main__':
     check_create_dir(Env_name, 'model')
     parser = argparse.ArgumentParser("Hyperparameters Setting for MADDPG and MATD3 in MPE environment")
-    parser.add_argument("--max_train_steps", type=int, default=int(1e6), help=" Maximum number of training steps")
+    parser.add_argument("--max_train_steps", type=int, default=int(25e5), help=" Maximum number of training steps")
     parser.add_argument("--episode_limit", type=int, default=1000, help="Maximum number of steps per episode")
-    parser.add_argument("--test_episode_limit", type=int, default=2000, help="Maximum number of steps per test episode")
+    parser.add_argument("--test_episode_limit", type=int, default=1500, help="Maximum number of steps per test episode")
     parser.add_argument("--evaluate_freq", type=float, default=int(1e6),
                         help="Evaluate the policy every 'evaluate_freq' steps")
     parser.add_argument("--evaluate_times", type=float, default=1, help="Evaluate times")

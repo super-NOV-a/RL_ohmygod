@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 
-Env_name = 'c3v1mahpo'  # c3v1的critic是全连接
+Env_name = 'c3v1mahpo'
 Mark = 9200
 test_times = 300
 action = 'vel'

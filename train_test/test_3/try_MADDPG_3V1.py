@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 
-Env_name = 'c3v1maddpg'  # c3v1\c3v1a\c3v1p  # MADDPG训练的模型
-Mark = 7005  # todo 测试时指定mark MADDPG C3V1A 最好的是7005
+Env_name = 'c3v1maddpg'
+Mark = 7005  # 测试时指定mark MADDPG  最好的是7005
 test_times = 300
 action = 'vel'
 Eval_save = False               # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!

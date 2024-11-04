@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 
 
 Env_name = 'c3v1_GR'  # c3v1A_GR (最好的为9200) GR为全局奖励
-Mark = 9200  # todo 测试时指定mark
+Mark = 9200
 test_times = 300
 action = 'vel'
 Eval_save = False               # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!

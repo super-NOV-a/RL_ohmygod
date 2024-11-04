@@ -15,7 +15,7 @@ import plotly.graph_objects as go
 
 
 Env_name = 'c3v1_SR'  # SR为共享奖励最好为9244
-Mark = 9244  # todo 测试时指定mark
+Mark = 9244
 test_times = 300
 action = 'vel'
 Eval_save = False               # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!

@@ -5,10 +5,10 @@ import numpy as np
 import argparse
 from train_test.utils.matd3_graph import MATD3
 import copy
-from gym_pybullet_drones.envs.A3O3 import A3o3
-from gym_pybullet_drones.envs.B3T3 import B3T3
-from gym_pybullet_drones.envs.C3V1_Test import C3V1_Test
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.envs.A3O3 import A3o3
+from train_test.gym_pybullet_drones.envs.B3T3 import B3T3
+from train_test.gym_pybullet_drones.envs.C3V1_Test import C3V1_Test
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 

@@ -5,11 +5,11 @@ import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 import argparse
 import copy
-from utils.replay_buffer import ReplayBuffer
-from utils.maddpg import MADDPG
-from utils.matd3_attention import MATD3
-from gym_pybullet_drones.envs.C3V1_Global_R import C3V1_GlobalReward    # 全局奖励
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.utils.replay_buffer import ReplayBuffer
+from train_test.utils.maddpg import MADDPG
+from train_test.utils.matd3_attention import MATD3
+from train_test.gym_pybullet_drones.envs.C3V1_Global_R import C3V1_GlobalReward    # 全局奖励
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
 Env_name = 'index2_global'  # 全局激励方法
 action = 'vel'

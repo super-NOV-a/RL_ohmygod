@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import copy
-from .networks import Actor, Critic_MADDPG
+from train_test.utils.networks import Actor, Critic_MADDPG
 
 
 class MADDPG(object):

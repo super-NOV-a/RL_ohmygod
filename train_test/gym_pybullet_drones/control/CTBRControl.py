@@ -8,7 +8,7 @@ import struct
 from transforms3d.quaternions import rotate_vector, qconjugate, mat2quat, qmult
 from transforms3d.utils import normalized_vector
 
-from gym_pybullet_drones.utils.enums import DroneModel
+from train_test.gym_pybullet_drones.utils.enums import DroneModel
 
 class CTBRControl(object):
     """Base class for control.

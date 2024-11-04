@@ -1,8 +1,8 @@
 import itertools
 import numpy as np
 import pybullet as p
-from ..envs.ObstacleRLAviary import ObstacleRLAviary
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType
+from train_test.gym_pybullet_drones.envs.ObstacleRLAviary import ObstacleRLAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
 
 
 class Obstacle(ObstacleRLAviary):

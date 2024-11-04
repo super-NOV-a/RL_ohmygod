@@ -3,12 +3,10 @@ import random
 import torch
 import numpy as np
 import argparse
-from train_test.utils.maddpg import MADDPG
 import copy
-import sys
-sys.path.append('../')
-from gym_pybullet_drones.envs.C3V1_Test import C3V1_Test
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.utils.maddpg import MADDPG
+from train_test.gym_pybullet_drones.envs.C3V1_Test import C3V1_Test
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
@@ -38,10 +36,10 @@ class Runner:
         self.args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.env_name = Env_name
         self.number = 3  #
-        self.seed = 11452  # 保证一个seed，名称使用记号--mark
+        self.seed = 1145  # 保证一个seed，名称使用记号--mark
         self.mark = Mark  # todo 指定mark
         Load_Steps = 10000000  # self.args.max_train_steps = 1e6
-        self.test_times = max(150, min(300, test_times))  # 修改为100次运行
+        self.test_times = test_times  # 修改为100次运行
         self.done_count = 0  # 用于记录胜利次数
         self.success_count = 0  # 用于记录成功次数（完美条件）
         # Set random seed
@@ -70,11 +68,13 @@ class Runner:
             print("Wrong algorithm!!!")
         # 加载模型参数
         for agent_id in range(self.args.N_drones):
-            model_path = "../model/{}/{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(self.env_name,
-                                                                                              self.args.algorithm,
-                                                                                              self.mark, self.number,
-                                                                                              int(Load_Steps / 1000),
-                                                                                              agent_id)  # agent_id
+            model_path = os.path.join(os.path.dirname(__file__), "../model", self.env_name,
+                                      "{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(
+                                          self.args.algorithm,
+                                          self.mark,
+                                          self.number,
+                                          int(Load_Steps / 1000),
+                                          agent_id))
             self.agent_n[agent_id].actor.load_state_dict(torch.load(model_path))
         self.evaluate_rewards = []  # Record the rewards during the evaluating
         self.noise_std = self.args.noise_std_init  # Initialize noise_std

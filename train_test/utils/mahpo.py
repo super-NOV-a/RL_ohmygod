@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import copy
-from .graph_networks import Actor, Critic_MATD3_Graph
+from train_test.utils.graph_networks import Actor, Critic_MATD3_Graph
 
 
 class MAHPO(object):

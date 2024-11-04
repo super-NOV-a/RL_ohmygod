@@ -4,9 +4,9 @@ import pybullet as p
 from gymnasium import spaces
 from collections import deque
 
-from ..envs.ObstacleBaseAviary import ObstacleBaseAviary
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
-from ..control.DSLPIDControl import DSLPIDControl
+from train_test.gym_pybullet_drones.envs.ObstacleBaseAviary import ObstacleBaseAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
+from train_test.gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
 
 
 class ObstacleRLAviary(ObstacleBaseAviary):

@@ -1,6 +1,6 @@
 import numpy as np
-from ..envs.C3V1_CommRLAviary import C3V1_CommRLAviary
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType
+from train_test.gym_pybullet_drones.envs.C3V1_CommRLAviary import C3V1_CommRLAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
 
 
 class C3V1_Comm(C3V1_CommRLAviary):

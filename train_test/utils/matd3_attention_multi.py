@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import copy
-from .networks import Actor, Critic_MATD3_Attention_Potential   # 不再有势能
+from train_test.utils.networks import Actor, Critic_MATD3_Attention_Potential   # 不再有势能
 
 
 class MATD3(object):

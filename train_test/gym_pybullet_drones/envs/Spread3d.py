@@ -1,8 +1,8 @@
 import itertools
 import numpy as np
 import pybullet as p
-from ..envs.LyyRLAviary import LyyRLAviary
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType
+from train_test.gym_pybullet_drones.envs.LyyRLAviary import LyyRLAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
 
 
 class Spread3dAviary(LyyRLAviary):

@@ -5,11 +5,11 @@ import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 import argparse
 import copy
-from utils.replay_buffer import ReplayBuffer
-from utils.maddpg import MADDPG
-from utils.matd3_attention import MATD3
-from gym_pybullet_drones.envs.C3V1 import C3V1
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.utils.replay_buffer import ReplayBuffer
+from train_test.utils.maddpg import MADDPG
+from train_test.utils.matd3_attention import MATD3
+from train_test.gym_pybullet_drones.envs.C3V1 import C3V1
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
 Env_name = 'index1_attention'  # 'index1_attention'
 action = 'vel'
@@ -24,7 +24,7 @@ class Runner:
         self.number = args.N_drones
         self.seed = args.seed  # 保证一个seed，名称使用记号--mark
         self.mark = args.mark
-        self.load_mark = 9200
+        self.load_mark = None
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
         Ctrl_Freq = args.Ctrl_Freq  # 30
         self.set_random_seed(self.seed)

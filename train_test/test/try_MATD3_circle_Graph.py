@@ -4,10 +4,10 @@ import time
 import torch
 import numpy as np
 import argparse
-from ..utils.matd3_graph import MATD3
+from train_test.utils.matd3_graph import MATD3
 import copy
-from gym_pybullet_drones.envs.CircleSpread import CircleSpreadAviary
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.envs.CircleSpread import CircleSpreadAviary
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 
 Env_name = 'circleG'

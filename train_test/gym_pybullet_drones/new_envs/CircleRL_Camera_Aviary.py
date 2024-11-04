@@ -7,9 +7,9 @@ from collections import deque
 
 from torch.distributions import Categorical
 
-from gym_pybullet_drones.new_envs.CircleBase_Camera_Aviary import CircleBaseCameraAviary
-from gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
-from gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
+from train_test.gym_pybullet_drones.new_envs.CircleBase_Camera_Aviary import CircleBaseCameraAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
+from train_test.gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
 
 
 class CircleRLCameraAviary(CircleBaseCameraAviary):

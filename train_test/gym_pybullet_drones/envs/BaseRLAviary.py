@@ -3,10 +3,9 @@ import numpy as np
 import pybullet as p
 from gymnasium import spaces
 from collections import deque
-
-from ..envs.BaseAviary import BaseAviary
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
-from ..control.DSLPIDControl import DSLPIDControl
+from train_test.gym_pybullet_drones.envs.BaseAviary import BaseAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
+from train_test.gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
 
 
 class BaseRLAviary(BaseAviary):

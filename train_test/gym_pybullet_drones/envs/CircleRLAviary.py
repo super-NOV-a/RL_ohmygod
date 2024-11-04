@@ -4,9 +4,9 @@ import pybullet as p
 from gymnasium import spaces
 from collections import deque
 
-from ..envs.CircleBaseAviary import CircleBaseAviary
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
-from ..control.DSLPIDControl import DSLPIDControl
+from train_test.gym_pybullet_drones.envs.CircleBaseAviary import CircleBaseAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
+from train_test.gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
 
 
 class CircleRLAviary(CircleBaseAviary):

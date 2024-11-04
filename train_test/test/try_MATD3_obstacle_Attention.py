@@ -1,13 +1,13 @@
-mport os
+import os
 import random
 import time
 import torch
 import numpy as np
 import argparse
-from utils.matd3 import MATD3
+from train_test.utils.matd3 import MATD3
 import copy
-from gym_pybullet_drones.envs.Obstacle import Obstacle
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.envs.Obstacle import Obstacle
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 
 Env_name = 'obstacle'

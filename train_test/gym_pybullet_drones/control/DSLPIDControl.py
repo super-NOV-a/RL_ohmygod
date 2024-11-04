@@ -3,8 +3,8 @@ import numpy as np
 import pybullet as p
 from scipy.spatial.transform import Rotation
 
-from gym_pybullet_drones.control.BaseControl import BaseControl
-from gym_pybullet_drones.utils.enums import DroneModel
+from train_test.gym_pybullet_drones.control.BaseControl import BaseControl
+from train_test.gym_pybullet_drones.utils.enums import DroneModel
 
 class DSLPIDControl(BaseControl):
     """PID control class for Crazyflies.

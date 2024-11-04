@@ -4,10 +4,10 @@ import random
 import torch
 import numpy as np
 import argparse
-from ..utils.matd3_attention import MATD3
+from train_test.utils.matd3_attention import MATD3
 import copy
-from gym_pybullet_drones.envs.CnV1_Test import CnV1_Test
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.envs.CnV1_Test import CnV1_Test
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 

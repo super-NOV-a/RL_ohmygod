@@ -15,11 +15,11 @@ import time
 import argparse
 import numpy as np
 
-from gym_pybullet_drones.utils.utils import sync, str2bool
-from gym_pybullet_drones.utils.enums import DroneModel, Physics
-from gym_pybullet_drones.envs.CtrlAviary import CtrlAviary
-from gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
-from gym_pybullet_drones.utils.Logger import Logger
+from train_test.gym_pybullet_drones.utils.utils import sync, str2bool
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics
+from train_test.gym_pybullet_drones.envs.CtrlAviary import CtrlAviary
+from train_test.gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
+from train_test.gym_pybullet_drones.utils.Logger import Logger
 
 DEFAULT_DRONE = DroneModel('cf2x')
 DEFAULT_GUI = True

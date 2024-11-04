@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+
+train_test/runs/
+train_test/not_used/
+train_test/agent_paths/
+train_test/test_*/agent_paths/
+train_test/useful_model/

@@ -1,6 +1,6 @@
 import numpy as np
-from ..envs.A3O3RL import A3o3RL
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType
+from train_test.gym_pybullet_drones.envs.A3O3RL import A3o3RL
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
 
 
 class A3o3(A3o3RL):

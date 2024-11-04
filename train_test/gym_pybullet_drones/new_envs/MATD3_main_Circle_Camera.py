@@ -5,8 +5,8 @@ import argparse
 from utils.replay_buffer import ReplayBuffer
 from utils.matd3 import MATD3
 import copy
-from gym_pybullet_drones.new_envs.CircleSpread_Camera import CircleCameraAviary
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.new_envs.CircleSpread_Camera import CircleCameraAviary
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
 Env_name = 'circle'  # 'spread3d', 'simple_spread'
 action = 'vel_yaw'

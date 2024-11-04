@@ -1,8 +1,8 @@
 import itertools
 import numpy as np
 import pybullet as p
-from gym_pybullet_drones.new_envs.CircleRL_Camera_Aviary import CircleRLCameraAviary
-from gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
+from train_test.gym_pybullet_drones.new_envs.CircleRL_Camera_Aviary import CircleRLCameraAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
 
 
 class CircleCameraAviary(CircleRLCameraAviary):

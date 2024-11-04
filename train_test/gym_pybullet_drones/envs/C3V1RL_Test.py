@@ -3,9 +3,9 @@ import numpy as np
 import pybullet as p
 from gymnasium import spaces
 from collections import deque
-from ..envs.C3V1Base_Test import C3V1Base_Test
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
-from ..control.DSLPIDControl import DSLPIDControl
+from train_test.gym_pybullet_drones.envs.C3V1Base_Test import C3V1Base_Test
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType, ImageType
+from train_test.gym_pybullet_drones.control.DSLPIDControl import DSLPIDControl
 
 
 class C3V1RL_Test(C3V1Base_Test):

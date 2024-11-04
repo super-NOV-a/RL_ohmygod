@@ -12,7 +12,7 @@ import numpy as np
 import pybullet as p
 import pybullet_data
 import gymnasium as gym
-from ..utils.enums import DroneModel, Physics, ImageType
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ImageType
 
 
 class BaseAviary(gym.Env):

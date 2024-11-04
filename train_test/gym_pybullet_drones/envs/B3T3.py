@@ -1,8 +1,7 @@
 import copy
-
 import numpy as np
-from ..envs.B3T3RL import B3T3RL
-from ..utils.enums import DroneModel, Physics, ActionType, ObservationType
+from train_test.gym_pybullet_drones.envs.B3T3RL import B3T3RL
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ActionType, ObservationType
 
 
 class B3T3(B3T3RL):

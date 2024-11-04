@@ -1,6 +1,6 @@
 import numpy as np
-from gym_pybullet_drones.new_envs.CircleSpread_Camera import CircleCameraAviary
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.new_envs.CircleSpread_Camera import CircleCameraAviary
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 
 # 初始化环境

@@ -10,7 +10,7 @@ import numpy as np
 import pybullet as p
 import pybullet_data
 import gymnasium as gym
-from ..utils.enums import DroneModel, Physics, ImageType
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics, ImageType
 
 
 def generate_non_overlapping_positions_numpy(scale=1.0):
@@ -596,7 +596,7 @@ class C3V1Base_Test(gym.Env):
         self.PLANE_ID = p.loadURDF("plane.urdf", physicsClientId=self.CLIENT)
 
         self.DRONE_IDS = np.array(
-            [p.loadURDF(pkg_resources.resource_filename('gym_pybullet_drones', 'assets/' + self.URDF),
+            [p.loadURDF(pkg_resources.resource_filename('train_test.gym_pybullet_drones', 'assets/' + self.URDF),
                         self.INIT_XYZS[i, :],
                         p.getQuaternionFromEuler(self.INIT_RPYS[i, :]),
                         flags=p.URDF_USE_INERTIA_FROM_FILE,
@@ -1163,7 +1163,7 @@ class C3V1Base_Test(gym.Env):
         files in folder `assets/`.
 
         """
-        URDF_TREE = etxml.parse(pkg_resources.resource_filename('gym_pybullet_drones', 'assets/' + self.URDF)).getroot()
+        URDF_TREE = etxml.parse(pkg_resources.resource_filename('train_test.gym_pybullet_drones', 'assets/' + self.URDF)).getroot()
         M = float(URDF_TREE[1][0][1].attrib['value'])
         L = float(URDF_TREE[0].attrib['arm'])
         THRUST2WEIGHT_RATIO = float(URDF_TREE[0].attrib['thrust2weight'])

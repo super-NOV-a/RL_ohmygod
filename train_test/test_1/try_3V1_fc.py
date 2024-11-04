@@ -3,12 +3,10 @@ import random
 import torch
 import numpy as np
 import argparse
-from train_test.utils.matd3 import MATD3
 import copy
-import sys
-sys.path.append('../')
-from gym_pybullet_drones.envs.C3V1_Test import C3V1_Test
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.utils.matd3 import MATD3
+from train_test.gym_pybullet_drones.envs.C3V1_Test import C3V1_Test
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
@@ -16,14 +14,14 @@ Env_name = 'c3v1'  # c3v1的critic是全连接
 Mark = 9201  # todo 测试时指定mark 全连接最好的是9201
 test_times = 300
 action = 'vel'
-Eval_save = False               # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!
-Env_gui = False                 # 环境gui是否开启 建议关闭 该选项会增加时间
-Display = False                 # 是否展示图像 建议关闭，想看去文件夹下面看去
+Eval_save = False  # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!
+Env_gui = False  # 环境gui是否开启 建议关闭 该选项会增加时间
+Display = False  # 是否展示图像 建议关闭，想看去文件夹下面看去
 Success_Time_Limit = 1000  # 成功时间限制，max: 1000, 不在环境中定义 todo 修改成功条件
 Success_FollowDistance = 1  # 成功靠近目标距离: 1。跟踪敌机的距离 胜利条件
 Success_AttackDistance = 0.5  # 成功打击距离: 0.5。打击敌机的距离 胜利条件
 Success_KeepDistance = 0.5  # 彼此不碰撞距离: 0.5。不碰撞距离 成功条件
-all_axis = 20       # 初始xyz范围最大值
+all_axis = 20  # 初始xyz范围最大值
 # 作战效能=跟踪敌机的距离限制+打击敌机的距离限制+彼此不碰撞距离条件
 print(f"保存轨迹: {Eval_save}")
 print(f"环境GUI: {Env_gui}")
@@ -36,10 +34,10 @@ class Runner:
         self.args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.env_name = Env_name
         self.number = 3  #
-        self.seed = 114542  # 保证一个seed，名称使用记号--mark
+        self.seed = 1145  # 保证一个seed，名称使用记号--mark
         self.mark = Mark  # todo 指定mark
         Load_Steps = 10000000  # self.args.max_train_steps = 1e6
-        self.test_times = max(150, min(300, test_times))  # 修改为100次运行
+        self.test_times = test_times  # 修改为100次运行
         self.done_count = 0  # 用于记录胜利次数
         self.success_count = 0  # 用于记录成功次数（完美条件）
         # Set random seed
@@ -68,12 +66,13 @@ class Runner:
             print("Wrong algorithm!!!")
         # 加载模型参数
         for agent_id in range(self.args.N_drones):
-            model_path = "../model/{}/{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(self.env_name,
-                                                                                                       self.args.algorithm,
-                                                                                                       self.mark,
-                                                                                                       self.number,
-                                                                                                       int(Load_Steps / 1000),
-                                                                                                       agent_id)  # agent_id
+            model_path = os.path.join(os.path.dirname(__file__), "../model", self.env_name,
+                                      "{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(
+                                          self.args.algorithm,
+                                          self.mark,
+                                          self.number,
+                                          int(Load_Steps / 1000),
+                                          agent_id))
             self.agent_n[agent_id].actor.load_state_dict(torch.load(model_path))
         self.evaluate_rewards = []  # Record the rewards during the evaluating
         self.noise_std = self.args.noise_std_init  # Initialize noise_std

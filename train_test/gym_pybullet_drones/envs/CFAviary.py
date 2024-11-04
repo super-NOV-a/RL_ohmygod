@@ -2,11 +2,9 @@ import numpy as np
 from gymnasium import spaces
 import socket
 import math 
-
 from scipy.spatial.transform import Rotation as R
-
-from ..envs.BaseAviary import BaseAviary
-from ..utils.enums import DroneModel, Physics
+from train_test.gym_pybullet_drones.envs.BaseAviary import BaseAviary
+from train_test.gym_pybullet_drones.utils.enums import DroneModel, Physics
 try:
     import pycffirmware as firm 
 except ImportError:

@@ -25,10 +25,10 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnRewardThreshold
 from stable_baselines3.common.evaluation import evaluate_policy
 
-from gym_pybullet_drones.utils.Logger import Logger
-from gym_pybullet_drones.envs.Spread3d import Spread3dAviary
-from gym_pybullet_drones.utils.utils import sync, str2bool
-from gym_pybullet_drones.utils.enums import ObservationType, ActionType
+from train_test.gym_pybullet_drones.utils.Logger import Logger
+from train_test.gym_pybullet_drones.envs.Spread3d import Spread3dAviary
+from train_test.gym_pybullet_drones.utils.utils import sync, str2bool
+from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
 
 DEFAULT_GUI = True
 DEFAULT_RECORD_VIDEO = True

@@ -3,6 +3,8 @@ import torch.nn.functional as F
 import numpy as np
 import copy
 from train_test.utils.networks import Actor, Critic_MATD3
+import torch.optim as optim
+from torch.optim.lr_scheduler import StepLR
 
 
 class MATD3(object):
@@ -37,6 +39,10 @@ class MATD3(object):
             self.critic_optimizer = shared_critic_optimizer
 
         self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=self.lr_a)
+        # 添加学习率调度器
+        self.actor_scheduler = optim.lr_scheduler.StepLR(self.actor_optimizer, step_size=args.lr_decay_step, gamma=args.lr_decay_gamma)
+        self.critic_scheduler = optim.lr_scheduler.StepLR(self.critic_optimizer, step_size=args.lr_decay_step, gamma=args.lr_decay_gamma)
+
 
     # Each agent selects actions based on its own local observations(add noise for exploration)
     def choose_action(self, obs, noise_std):
@@ -58,11 +64,11 @@ class MATD3(object):
                 batch_a_next = (batch_a_next + noise).clamp(-self.max_action, self.max_action)
                 batch_a_next_n.append(batch_a_next)
 
-            Q1_next, _ = self.critic_target(batch_obs_next_n, batch_a_next_n)
-            target_Q = batch_r_n[self.agent_id] + self.gamma * (1 - batch_done_n[self.agent_id]) * Q1_next  # torch.min(Q1_next, Q2_next)  # shape:(batch_size,1)
+            Q1_next, Q2_next = self.critic_target(batch_obs_next_n, batch_a_next_n)
+            target_Q = batch_r_n[self.agent_id] + self.gamma * (1 - batch_done_n[self.agent_id]) * torch.min(Q1_next, Q2_next)  # shape:(batch_size,1)
 
-        current_Q1, _ = self.critic(batch_obs_n, batch_a_n)  # shape:(batch_size,1)
-        critic_loss = F.mse_loss(current_Q1, target_Q)  # + F.mse_loss(current_Q2, target_Q)
+        current_Q1, current_Q2 = self.critic(batch_obs_n, batch_a_n)  # shape:(batch_size,1)
+        critic_loss = F.mse_loss(current_Q1, target_Q)  + F.mse_loss(current_Q2, target_Q)
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
         if self.use_grad_clip:
@@ -83,6 +89,10 @@ class MATD3(object):
 
             for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
                 target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
+
+            # 每次策略更新后，调整学习率
+            self.actor_scheduler.step()
+        self.critic_scheduler.step()
 
     def save_model(self, env_name, algorithm, mark, number, total_steps, agent_id):
         torch.save(self.actor.state_dict(), "./model/{}/{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(env_name, algorithm, mark, number, int(total_steps / 1000), agent_id))

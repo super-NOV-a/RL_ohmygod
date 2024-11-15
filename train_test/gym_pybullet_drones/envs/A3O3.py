@@ -61,18 +61,13 @@ class A3o3(A3o3RL):
         v = np.linalg.norm(velocity, axis=1)  # 计算速度的 L2 范数
 
         rewards += 30 * np.power(20, -dis_to_target[:, -1])  # 距离目标奖励
-        rewards -= 20 * v  # 速度惩罚
-        rewards += np.sum(velocity * dis_to_target[:, :3], axis=1) / (v * dis_to_target[:, -1])  # 相似度奖励
-        rewards += 10 * np.power(20, -np.abs(dis_to_target[:, 2]))  # 高度奖励
-        # rewards -= 0.1* np.linalg.norm(velocity - self.last_v, axis=1) / np.where(v > 0, v, 1)  # 加速度惩罚
-        # angular_velocity = np.linalg.norm(np.array([state['ang_vel'] for state in states.values()]), axis=1)
-        # rewards -= 0.5 * angular_velocity  # 角速度惩罚
+        rewards -= 10 * v  # 速度惩罚
 
         # 队友保持距离与碰撞惩罚
         if self.NUM_DRONES > 1:
             other_pos_dis = np.array([state['other_pos_dis'] for state in states.values()])
             dist_between_drones = other_pos_dis[:, 3::4]  # 获取距离
-            rewards -= np.sum(100 * np.power(5, (-4 * dist_between_drones - 1)) - 0.2, axis=1)
+            rewards -= np.sum(20 * np.power(5, (-4 * dist_between_drones - 1)) - 0.2, axis=1)
         return rewards
 
     ################################################################################

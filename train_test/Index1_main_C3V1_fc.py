@@ -192,6 +192,8 @@ if __name__ == '__main__':
     parser.add_argument("--mark", type=int, default=1145, help="The frequency of policy updates")
     parser.add_argument("--N_drones", type=int, default=3, help="The number of drones")
     parser.add_argument("--Ctrl_Freq", type=int, default=30, help="The frequency of ctrl")
+    parser.add_argument("--lr_decay_step", type=int, default=10000, help="学习率衰减步长")
+    parser.add_argument("--lr_decay_gamma", type=float, default=0.999, help="学习率衰减系数")
     args = parser.parse_args()
     args.noise_std_decay = (args.noise_std_init - args.noise_std_min) / args.noise_decay_steps
 

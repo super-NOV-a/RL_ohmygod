@@ -34,7 +34,7 @@ def generate_non_overlapping_positions_numpy(scale=1.0):
     for cell_coord in cell_coordinates:  # 在每个单元格内随机生成一个位置
         x = np.random.uniform(cell_coord[0] * cell_size - scale, (cell_coord[0] + 1) * cell_size - scale)
         y = np.random.uniform(cell_coord[1] * cell_size - scale, (cell_coord[1] + 1) * cell_size - scale)
-        z = np.random.uniform(0., 2.)  # 保持z范围不变
+        z = np.random.uniform(0.5, 1.5)  # 保持z范围不变
         positions.append((x, y, z))
     return positions
 
@@ -578,11 +578,11 @@ class A3o3Base(gym.Env):
         self.DRONE_IDS = []
         for k in range(self.NUM_DRONES):
             if (k % 3) == 0:
-                drone_urdf_path = pkg_resources.resource_filename('gym_pybullet_drones', 'assets/' + 'cf2x.urdf')
+                drone_urdf_path = pkg_resources.resource_filename('train_test.gym_pybullet_drones', 'assets/' + 'cf2x.urdf')
             elif (k % 3) == 1:
-                drone_urdf_path = pkg_resources.resource_filename('gym_pybullet_drones', 'assets/' + 'cf2xg.urdf')
+                drone_urdf_path = pkg_resources.resource_filename('train_test.gym_pybullet_drones', 'assets/' + 'cf2xg.urdf')
             else:
-                drone_urdf_path = pkg_resources.resource_filename('gym_pybullet_drones', 'assets/' + 'cf2xb.urdf')
+                drone_urdf_path = pkg_resources.resource_filename('train_test.gym_pybullet_drones', 'assets/' + 'cf2xb.urdf')
             self.DRONE_IDS.append(p.loadURDF(drone_urdf_path,
                                              self.INIT_XYZS[k, :], p.getQuaternionFromEuler(self.INIT_RPYS[k, :]),
                                              flags=p.URDF_USE_INERTIA_FROM_FILE,
@@ -1124,7 +1124,7 @@ class A3o3Base(gym.Env):
         files in folder `assets/`.
 
         """
-        URDF_TREE = etxml.parse(pkg_resources.resource_filename('gym_pybullet_drones', 'assets/' + self.URDF)).getroot()
+        URDF_TREE = etxml.parse(pkg_resources.resource_filename('train_test.gym_pybullet_drones', 'assets/' + self.URDF)).getroot()
         M = float(URDF_TREE[1][0][1].attrib['value'])
         L = float(URDF_TREE[0].attrib['arm'])
         THRUST2WEIGHT_RATIO = float(URDF_TREE[0].attrib['thrust2weight'])

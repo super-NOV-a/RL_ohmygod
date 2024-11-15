@@ -9,6 +9,8 @@ from train_test.utils.maddpg import MADDPG
 from train_test.utils.matd3 import MATD3
 from train_test.gym_pybullet_drones.envs.A3O3 import A3o3
 from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionType
+import torch.optim as optim
+from torch.optim.lr_scheduler import StepLR  # 或者选择其他调度器如 ExponentialLR, CosineAnnealingLR 等
 
 Env_name = 'a3o3'  # 'spread3d', 'simple_spread'
 action = 'vel'
@@ -26,7 +28,7 @@ class Runner:
         self.load_mark = None
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
         Ctrl_Freq = args.Ctrl_Freq  # 30
-        self.env = A3o3(gui=True, num_drones=args.N_drones, obs=ObservationType(observation),
+        self.env = A3o3(gui=False, num_drones=args.N_drones, obs=ObservationType(observation),
                         act=ActionType(action),
                         ctrl_freq=Ctrl_Freq,  # 这个值越大，仿真看起来越慢，应该是由于频率变高，速度调整的更小了
                         need_target=True, obs_with_act=True, all_axis=2)
@@ -104,9 +106,8 @@ class Runner:
                     break
 
             if self.replay_buffer.current_size > self.args.batch_size:
-                for _ in range(50):
-                    for agent_id in range(self.args.N_drones):
-                        self.agent_n[agent_id].train(self.replay_buffer, self.agent_n)
+                for agent_id in range(self.args.N_drones):
+                    self.agent_n[agent_id].train(self.replay_buffer, self.agent_n)
 
             print(f"total_steps:{self.total_steps} \t episode_total_reward:{int(episode_total_reward)} \t "
                   f"noise_std:{self.noise_std}")
@@ -145,7 +146,7 @@ def check_create_dir(env_name, model_dir):
 if __name__ == '__main__':
     check_create_dir(Env_name, 'model')
     parser = argparse.ArgumentParser("Hyperparameters Setting for MADDPG and MATD3 in MPE environment")
-    parser.add_argument("--max_train_steps", type=int, default=int(1e6), help=" Maximum number of training steps")
+    parser.add_argument("--max_train_steps", type=int, default=int(1e7), help=" Maximum number of training steps")
     parser.add_argument("--episode_limit", type=int, default=1000, help="Maximum number of steps per episode")
     parser.add_argument("--test_episode_limit", type=int, default=1500, help="Maximum number of steps per test episode")
     parser.add_argument("--evaluate_freq", type=float, default=100000,
@@ -155,7 +156,7 @@ if __name__ == '__main__':
 
     parser.add_argument("--algorithm", type=str, default="MATD3", help="MADDPG or MATD3")
     parser.add_argument("--buffer_size", type=int, default=int(1e6), help="The capacity of the replay buffer")
-    parser.add_argument("--batch_size", type=int, default=1024, help="Batch size")  # 1024-》4048
+    parser.add_argument("--batch_size", type=int, default=4048, help="Batch size")  # 1024-》4048
     parser.add_argument("--hidden_dim", type=int, default=64,
                         help="The number of neurons in hidden layers of the neural network")
     parser.add_argument("--noise_std_init", type=float, default=0.05, help="The std of Gaussian noise for exploration")
@@ -163,8 +164,8 @@ if __name__ == '__main__':
     parser.add_argument("--noise_decay_steps", type=float, default=1e6,
                         help="How many steps before the noise_std decays to the minimum")
     parser.add_argument("--use_noise_decay", type=bool, default=True, help="Whether to decay the noise_std")
-    parser.add_argument("--lr_a", type=float, default=5e-4, help="Learning rate of actor")
-    parser.add_argument("--lr_c", type=float, default=5e-4, help="Learning rate of critic")
+    parser.add_argument("--lr_a", type=float, default=1e-4, help="Learning rate of actor")
+    parser.add_argument("--lr_c", type=float, default=1e-4, help="Learning rate of critic")
     parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
     parser.add_argument("--tau", type=float, default=0.01, help="Softly update the target network")
     parser.add_argument("--use_orthogonal_init", type=bool, default=True, help="Orthogonal initialization")
@@ -175,9 +176,11 @@ if __name__ == '__main__':
     parser.add_argument("--noise_clip", type=float, default=0.5, help="Clip noise")
     parser.add_argument("--policy_update_freq", type=int, default=2, help="The frequency of policy updates")
 
-    parser.add_argument("--mark", type=int, default=1145, help="The frequency of policy updates")
+    parser.add_argument("--mark", type=int, default=44, help="The frequency of policy updates")
     parser.add_argument("--N_drones", type=int, default=3, help="The number of drones")
     parser.add_argument("--Ctrl_Freq", type=int, default=30, help="The frequency of ctrl")
+    parser.add_argument("--lr_decay_step", type=int, default=3000, help="学习率衰减步长")
+    parser.add_argument("--lr_decay_gamma", type=float, default=0.999, help="学习率衰减系数")
     args = parser.parse_args()
     args.noise_std_decay = (args.noise_std_init - args.noise_std_min) / args.noise_decay_steps
 

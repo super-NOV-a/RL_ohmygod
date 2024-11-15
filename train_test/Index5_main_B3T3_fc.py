@@ -26,7 +26,7 @@ class Runner:
         self.load_mark = None
         self.args.share_prob = 0.05  # 还是别共享了，有些无用
         Ctrl_Freq = args.Ctrl_Freq  # 30
-        self.env = B3T3(gui=True, num_drones=args.N_drones, obs=ObservationType(observation),
+        self.env = B3T3(gui=False, num_drones=args.N_drones, obs=ObservationType(observation),
                         act=ActionType(action),
                         ctrl_freq=Ctrl_Freq,  # 这个值越大，仿真看起来越慢，应该是由于频率变高，速度调整的更小了
                         need_target=True, obs_with_act=True, all_axis=2)
@@ -145,7 +145,7 @@ def check_create_dir(env_name, model_dir):
 if __name__ == '__main__':
     check_create_dir(Env_name, 'model')
     parser = argparse.ArgumentParser("Hyperparameters Setting for MADDPG and MATD3 in MPE environment")
-    parser.add_argument("--max_train_steps", type=int, default=int(1e6), help=" Maximum number of training steps")
+    parser.add_argument("--max_train_steps", type=int, default=int(1e7), help=" Maximum number of training steps")
     parser.add_argument("--episode_limit", type=int, default=1000, help="Maximum number of steps per episode")
     parser.add_argument("--test_episode_limit", type=int, default=1500, help="Maximum number of steps per test episode")
     parser.add_argument("--evaluate_freq", type=float, default=100000,
@@ -163,8 +163,8 @@ if __name__ == '__main__':
     parser.add_argument("--noise_decay_steps", type=float, default=1e6,
                         help="How many steps before the noise_std decays to the minimum")
     parser.add_argument("--use_noise_decay", type=bool, default=True, help="Whether to decay the noise_std")
-    parser.add_argument("--lr_a", type=float, default=5e-4, help="Learning rate of actor")
-    parser.add_argument("--lr_c", type=float, default=5e-4, help="Learning rate of critic")
+    parser.add_argument("--lr_a", type=float, default=2e-4, help="Learning rate of actor")
+    parser.add_argument("--lr_c", type=float, default=2e-4, help="Learning rate of critic")
     parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
     parser.add_argument("--tau", type=float, default=0.01, help="Softly update the target network")
     parser.add_argument("--use_orthogonal_init", type=bool, default=True, help="Orthogonal initialization")

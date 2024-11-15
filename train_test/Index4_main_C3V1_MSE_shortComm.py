@@ -278,7 +278,7 @@ if __name__ == '__main__':
     parser.add_argument("--noise_clip", type=float, default=0.5, help="Clip noise")
     parser.add_argument("--policy_update_freq", type=int, default=2, help="The frequency of policy updates")
     parser.add_argument("--seed", type=int, default=55, help="The SEED")
-    parser.add_argument("--mark", type=int, default=999, help="The frequency of policy updates")
+    parser.add_argument("--mark", type=int, default=1, help="The frequency of policy updates")
     parser.add_argument("--N_drones", type=int, default=3, help="The number of drones")
     parser.add_argument("--Ctrl_Freq", type=int, default=30, help="The frequency of ctrl")
     parser.add_argument("--n_step", type=int, default=2)

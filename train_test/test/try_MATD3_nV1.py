@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 Env_name = 'c3v1G'  # c3v1 \ c3v1A (最好的为9200)\ c3v1G\c3v1A_GR (最好的为9200)
-Mark = 9242  # todo 测试时指定mark
+Mark = 9000  # todo 测试时指定mark
 action = 'vel'
 Eval_plot = False  # 是否绘制轨迹图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!
 Env_gui = True  # 环境gui是否开启 建议关闭 该选项会增加时间
@@ -24,8 +24,8 @@ Success_AttackDistance = 0.2  # 成功打击距离: 0.1。打击敌机的距离 
 Success_KeepDistance = 0.1  # 彼此不碰撞距离: 0.1。不碰撞距离 成功条件
 # 胜利条件=时间限制+跟踪敌机的距离限制+打击敌机的距离限制
 # 成功条件(完美条件)=时间限制+跟踪敌机的距离限制+打击敌机的距离限制+彼此不碰撞距离条件
-num_drones = 10
-all_axis = 2    # x,y范围
+num_drones = 4
+all_axis = 2  # x,y范围
 need_normalizer = False
 
 
@@ -114,19 +114,21 @@ class Runner:
         # 加载模型参数
         for agent_id in range(self.args.N_drones):
             if agent_id >= 2:
-                model_path = "./model/{}/{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(self.env_name,
-                                                                                                  self.args.algorithm,
-                                                                                                  self.mark,
-                                                                                                  self.number,
-                                                                                                  int(Load_Steps / 1000),
-                                                                                                  2)  # agent_id
+                model_path = os.path.join("E:\\PyProjects\\MARL_project\\train_test\\model", self.env_name,
+                                          "{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(
+                                              self.args.algorithm,
+                                              self.mark,
+                                              self.number,
+                                              int(Load_Steps / 1000),
+                                              2))
             else:
-                model_path = "./model/{}/{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(self.env_name,
-                                                                                                  self.args.algorithm,
-                                                                                                  self.mark,
-                                                                                                  self.number,
-                                                                                                  int(Load_Steps / 1000),
-                                                                                                  agent_id)  # agent_id
+                model_path = os.path.join("E:\\PyProjects\\MARL_project\\train_test\\model", self.env_name,
+                                          "{}_actor_mark_{}_number_{}_step_{}k_agent_{}.pth".format(
+                                              self.args.algorithm,
+                                              self.mark,
+                                              self.number,
+                                              int(Load_Steps / 1000),
+                                              agent_id))
             self.agent_n[agent_id].actor.load_state_dict(torch.load(model_path))
         self.evaluate_rewards = []  # Record the rewards during the evaluating
         self.noise_std = self.args.noise_std_init  # Initialize noise_std
@@ -164,7 +166,8 @@ class Runner:
         Success = False
         obs_n, _ = self.env_evaluate.reset()
         if need_normalizer:
-            obs_n = [self.normalize_obs(obs, normalizer) for obs, normalizer in zip(obs_n, self.normalizers)]    # 对 obs_n 进行归一化
+            obs_n = [self.normalize_obs(obs, normalizer) for obs, normalizer in
+                     zip(obs_n, self.normalizers)]  # 对 obs_n 进行归一化
         self.env_evaluate.collision = False
         episode_return = [0 for _ in range(self.args.N_drones)]
         episode_states = []
@@ -177,7 +180,7 @@ class Runner:
             obs_next_n, r_n, done_n, collided, _ = self.env_evaluate.step(copy.deepcopy(a_n))
             if need_normalizer:
                 obs_next_n = [self.normalize_obs(obs_next, normalizer) for obs_next, normalizer in
-                              zip(obs_next_n, self.normalizers)]    # 对 obs_next_n 进行归一化
+                              zip(obs_next_n, self.normalizers)]  # 对 obs_next_n 进行归一化
             for i in range(self.args.N_drones):
                 episode_return[i] += r_n[i]
 
@@ -195,7 +198,7 @@ class Runner:
         all_target_pos.append(episode_target_pos)
         all_states.append(episode_states)
         all_rewards.append(episode_rewards)
-        print(f"第{eval_time+1}次测试, 打击胜利最大数量:{max_job_done}\t")
+        print(f"第{eval_time + 1}次测试, 打击胜利最大数量:{max_job_done}\t")
 
         # 将数据转换为numpy数组
         if eval_plot:

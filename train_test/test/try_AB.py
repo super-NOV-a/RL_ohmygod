@@ -12,14 +12,14 @@ from train_test.gym_pybullet_drones.utils.enums import ObservationType, ActionTy
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
-Env_name = 'c3v1G'  # 模型名称  c3v1G是GAT, c3v1G2是GCN
-ENV = '3V1'  # 测试3个中的一个指定环境'3o3', '3T3', '3V1'
-Mark = 9244  # todo 测试时指定mark C3V1G最好的是9230,9203,9244，9242
-test_times = 300
+Env_name = 'a3o3'  # 模型名称  c3v1G是GAT, c3v1G2是GCN
+ENV = '3o3'  # 测试3个中的一个指定环境'3o3', '3T3', '3V1'
+Mark = 42  # todo 测试时指定mark C3V1G最好的是9230,9203,9244，9242
+test_times = 10
 action = 'vel'
 Eval_plot = False  # 是否绘制轨迹图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!
 Env_gui = True  # 环境gui是否开启 建议关闭 该选项会增加时间
-Display = False  # 开启Eval_plot后：绘制图像是否展示 建议关闭，想看去文件夹下面看去
+Display = True  # 开启Eval_plot后：绘制图像是否展示 建议关闭，想看去文件夹下面看去
 Need_Html = False  # 开启Eval_plot后：是否需要Html图像 建议关闭
 Success_Time_Limit = 1000  # 成功时间限制，max: 1000, 不在环境中定义 todo 修改成功条件
 Success_FollowDistance = 1  # 成功靠近目标距离: 1。跟踪敌机的距离 胜利条件

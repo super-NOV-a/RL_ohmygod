@@ -13,9 +13,9 @@ import plotly.graph_objects as go
 comm_level = 1  # 1表示无人机通信为12位 位置速度通信，2表示两两通信为18位 位置速度欧拉角
 Env_name = 'c3v1_1Comm'  # 新增了通信内容
 Mark = 9206  # todo 测试时指定mark  位置速度通信9206  位置速度欧拉角通信9202
-test_times = 300
+test_times = 200
 action = 'vel'
-Eval_save = False               # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!
+Eval_save = True               # 是否保存图像 该选项同时保存txt和png文件,重复保存会覆盖 该选项会增加运行时间!
 Env_gui = False                 # 环境gui是否开启 建议关闭 该选项会增加时间
 Display = False                 # 是否展示图像 建议关闭，想看去文件夹下面看去
 Success_Time_Limit = 1000       # 成功时间限制，max: 1000, 不在环境中定义 todo 修改成功条件
